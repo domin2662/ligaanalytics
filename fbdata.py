@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Arc
 import numpy as np
 import re, json, requests
-import seaborn as sns
+
 
 #st.beta_set_page_config(layout="wide")
 x = st.sidebar.header('⚽ Domin Analytics')  # 👈 this is a widget
