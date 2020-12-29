@@ -1,19 +1,15 @@
 
 import streamlit as st
 import pandas as pd
-import seaborn as sns
-
 from pandas import json_normalize
-
 import matplotlib.pyplot as plt
 from matplotlib.patches import Arc
 import numpy as np
-
 import re, json, requests
-
+import seaborn as sns
 
 #st.beta_set_page_config(layout="wide")
-x = st.sidebar.header('⚽ Analytics')  # 👈 this is a widget
+x = st.sidebar.header('⚽ Domin Analytics')  # 👈 this is a widget
 
 ####
 file_to_charge2 = st.sidebar.selectbox('temporada',('Temporada 2019-2020','Temporada 2018-2019','Temporada 2017-2018','Temporada 2016-2017'))
@@ -98,9 +94,8 @@ col1.dataframe(referee_graph)
 ## - GRÁFICO DE LOS ARBITROS - ##
 
 referee_graph.plot.bar()
-
 st.set_option('deprecation.showPyplotGlobalUse', False)
-#st.pyplot()
+col2.pyplot()
 
 
 
@@ -130,6 +125,7 @@ playername = st.sidebar.selectbox('SELECTOR PLAYER', ('Lionel Andrés Messi Cucc
 st.header('Gráficos por equipos:')
 
 my_exp = st.beta_expander('Visualización')
+
 with my_exp:
 
     mfc = p.loc[p['home_team.home_team_name'] == home_team, :]
@@ -142,43 +138,41 @@ with my_exp:
 
 
     st.write(mfc)
-    st.subheader('Gráficos {} en casa'.format(home_team))
-    allcolumns = mfc.columns.tolist()
-    typeofplot= 'bar'
-    select_column_names  = ['home_score','away_score']
-    select_column_names2  = ['away_score']
+    if home_team == "Barcelona":
+        st.subheader('Gráficos {} en casa'.format(home_team))
+        allcolumns = mfc.columns.tolist()
+        typeofplot= 'bar'
+        select_column_names  = ['home_score','away_score']
+        select_column_names2  = ['away_score']
+
+        if typeofplot == 'bar':
+            custdat =mfc[select_column_names]
+            st.bar_chart(custdat)
 
 
+        elif typeofplot:
+            custdat =mfc[select_column_names].plot(kind=type)
+            st.write(custdat)
+            st.pyplot()
 
 
-    if typeofplot == 'bar':
-        custdat =mfc[select_column_names]
-        st.bar_chart(custdat)
-
-
-    elif typeofplot:
-        custdat =mfc[select_column_names].plot(kind=type)
-        st.write(custdat)
-        st.pyplot()
-
-
-    # UNIQUE BAR CHART
+        # UNIQUE BAR CHART
     mec = p.loc[p['away_team.away_team_name'] == away_team, :]
 
+    if away_team == "Barcelona":
+        st.subheader('Gráficos {} fuera de casa'.format(away_team))
+        allcolumns = mec.columns.tolist()
+        typeofplot= 'bar'
+        select_column_names = ['home_score','away_score']
 
-    st.subheader('Gráficos {} fuera de casa'.format(away_team))
-    allcolumns = mec.columns.tolist()
-    typeofplot= 'bar'
-    select_column_names = ['home_score','away_score']
 
-
-    if typeofplot == 'bar':
-        custdat =mec[select_column_names]
-        st.bar_chart(custdat)
-    elif typeofplot:
-        custdat =mec[select_column_names].plot(kind=type)
-        st.write(custdat)
-        st.pyplot()
+        if typeofplot == 'bar':
+            custdat =mec[select_column_names]
+            st.bar_chart(custdat)
+        elif typeofplot:
+            custdat =mec[select_column_names].plot(kind=type)
+            st.write(custdat)
+            st.pyplot()
 
 ###############################################################
 ################ PRUEBA DE GRAFICOS ###########################
@@ -209,21 +203,6 @@ home_df = mfc.drop('home_score', axis=1)\
 df_revised = pd.concat([home_df, away_df])
 
 
-# Display original df and grouped bar chart
-#st.write(df_revised)
-
-my_exp3 = st.beta_expander('Goles marcados y recibidos en casa por el {}'.format(home_team))
-with my_exp3:
-    sns.set_theme(style="whitegrid")
-
-    sns.barplot(x="test", y="away_team.away_team_name", hue="Category", data = df_revised, ci="sd" ,n_boot=100, saturation=0.9,units=20,palette="Blues_d")
-    st.pyplot()
-
-my_exp31 = st.beta_expander('Vert Goles marcados y recibidos en casa por el {}'.format(home_team))
-with my_exp31:
-    sns.set_theme(style="whitegrid")
-    sns.barplot(x="away_team.away_team_name", y="test", hue="Category", data = df_revised, ci="hd" ,n_boot=100, saturation=0.9,units=20,color="salmon")
-    st.pyplot()
 
 
 
@@ -312,7 +291,7 @@ def createPitch(length, width, unity, linecolor):  # in meters
         else:
             # Create figure
             fig = plt.figure()
-            # fig.set_size_inches(7, 5)
+            fig.set_size_inches(7, 5)
             ax = fig.add_subplot(1, 1, 1)
 
             # Pitch Outline & Centre Line
